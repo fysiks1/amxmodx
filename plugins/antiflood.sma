@@ -16,6 +16,11 @@
 new Float:g_Flooding[MAX_PLAYERS + 1] = {0.0, ...}
 new g_Flood[MAX_PLAYERS + 1] = {0, ...}
 
+#define MSG_COUNT 3
+new g_msgIndex[MAX_PLAYERS + 1] = {0, ...}
+new Float:g_msgTimestamp[MAX_PLAYERS + 1][MSG_COUNT]
+new bool:g_newMode = true
+
 new amx_flood_time;
 
 public plugin_init()
@@ -33,25 +38,51 @@ public chkFlood(id)
 
 	if (maxChat)
 	{
-		new Float:nexTime = get_gametime()
-		
-		if (g_Flooding[id] > nexTime)
+		if( g_newMode )
 		{
-			if (g_Flood[id] >= 3)
+			new Float:timestampNow = get_gametime()
+			new indexToCompare = ( g_msgIndex[id] + 1 ) % MSG_COUNT // this is the oldest index
+
+			if( timestampNow - g_msgTimestamp[id][indexToCompare] < maxChat )
 			{
 				client_print(id, print_notify, "** %L **", id, "STOP_FLOOD")
-				g_Flooding[id] = nexTime + maxChat + 3.0
 				return PLUGIN_HANDLED
 			}
-			g_Flood[id]++
+			else
+			{
+				g_msgIndex[id]++
+				g_msgIndex[id] %= MSG_COUNT
+				g_msgTimestamp[id][g_msgIndex[id]] = timestampNow
+			}
 		}
-		else if (g_Flood[id])
+		else
 		{
-			g_Flood[id]--
+			new Float:nexTime = get_gametime()
+			
+			if (g_Flooding[id] > nexTime)
+			{
+				if (g_Flood[id] >= MSG_COUNT)
+				{
+					client_print(id, print_notify, "** %L **", id, "STOP_FLOOD")
+					g_Flooding[id] = nexTime + maxChat + 3.0
+					return PLUGIN_HANDLED
+				}
+				g_Flood[id]++
+			}
+			else if (g_Flood[id])
+			{
+				g_Flood[id]--
+			}
+			
+			g_Flooding[id] = nexTime + maxChat
 		}
-		
-		g_Flooding[id] = nexTime + maxChat
 	}
 
 	return PLUGIN_CONTINUE
+}
+
+public client_connect(id)
+{
+	g_Flood[id] = 0
+	g_Flooding[id] = 0.0
 }

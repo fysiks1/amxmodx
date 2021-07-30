@@ -16,6 +16,8 @@
 
 #define SELECTMAPS  5
 
+#define DEBUGFILE "opposing_forces_mapchooser_debug.txt"
+
 new Array:g_mapName;
 new g_mapNums;
 
@@ -64,13 +66,22 @@ public plugin_init()
 
 public checkVotes()
 {
-	new b = 0
+	new b = 0, szMapName[32]
+	
+	log_to_file(DEBUGFILE, "checkVotes() executed")
 	
 	for (new a = 0; a < g_mapVoteNum; ++a)
+	{	
+		ArrayGetString(g_mapName, g_nextName[a], szMapName, charsmax(szMapName))
+		log_to_file(DEBUGFILE, "%s has %d votes", szMapName, g_voteCount[a])
+		
 		if (g_voteCount[b] < g_voteCount[a])
 			b = a
-
+	}
 	
+	log_to_file(DEBUGFILE, "%s has %d votes", "Extend", g_voteCount[SELECTMAPS])
+	log_to_file(DEBUGFILE, "%s has %d votes", "None", g_voteCount[SELECTMAPS+1])
+
 	if (g_voteCount[SELECTMAPS] > g_voteCount[b]
 	    && g_voteCount[SELECTMAPS] > g_voteCount[SELECTMAPS+1])
 	{
@@ -82,6 +93,8 @@ public checkVotes()
 		client_print(0, print_chat, "%L", LANG_PLAYER, "CHO_FIN_EXT", steptime)
 		log_amx("Vote: Voting for the nextmap finished. Map %s will be extended to next %.0f minutes", mapname, steptime)
 		
+		log_to_file(DEBUGFILE, "Extend won the vote")
+
 		return
 	}
 	
@@ -90,6 +103,7 @@ public checkVotes()
 	{
 		ArrayGetString(g_mapName, g_nextName[b], smap, charsmax(smap));
 		set_cvar_string("amx_nextmap", smap);
+		log_to_file(DEBUGFILE, "amx_nextmap was set to %s", smap)
 	}
 
 	
@@ -100,18 +114,23 @@ public checkVotes()
 
 public countVote(id, key)
 {
+	log_to_file(DEBUGFILE, "countVote() executed (%d,%d, %d)", id, key, g_voteCount[key])
 	if (get_cvar_float("amx_vote_answers"))
 	{
 		new name[MAX_NAME_LENGTH]
 		get_user_name(id, name, charsmax(name))
 		
 		if (key == SELECTMAPS)
+		{
 			client_print(0, print_chat, "%L", LANG_PLAYER, "CHOSE_EXT", name)
+			log_to_file(DEBUGFILE, "%s (%d) chose %s (%d)", name, id, "Extend", g_voteCount[key]+1)
+		}
 		else if (key < SELECTMAPS)
 		{
 			new map[32];
 			ArrayGetString(g_mapName, g_nextName[key], map, charsmax(map));
 			client_print(0, print_chat, "%L", LANG_PLAYER, "X_CHOSE_X", name, map);
+			log_to_file(DEBUGFILE, "%s (%d) chose %s (%d)", name, id, map, g_voteCount[key]+1)
 		}
 	}
 	++g_voteCount[key]
@@ -166,7 +185,7 @@ public voteNextmap()
 	
 	new menu[512], a, mkeys = (1<<SELECTMAPS + 1)
 
-	new pos = format(menu, charsmax(menu), g_coloredMenus ? "\y%L:\w^n^n" : "%L:^n^n", LANG_SERVER, "CHOOSE_NEXTM")
+	new pos = format(menu, charsmax(menu), g_coloredMenus ? "\y%L:\w^n^n" : "%L:^n^n", LANG_SERVER, "CHOOSE_NEXTM") // "
 	new dmax = (g_mapNums > SELECTMAPS) ? SELECTMAPS : g_mapNums
 	
 	for (g_mapVoteNum = 0; g_mapVoteNum < dmax; ++g_mapVoteNum)
@@ -266,10 +285,13 @@ loadSettings(filename[])
 		{
 			ArrayPushString(g_mapName, szText);
 			++g_mapNums;
+			log_to_file(DEBUGFILE, "Loaded Map:  %s", g_mapName)
 		}
 		
 	}
 	
+	log_to_file(DEBUGFILE, "Number of maps loaded:  %d", g_mapNums)
+
 	fclose(fp);
 
 	return g_mapNums

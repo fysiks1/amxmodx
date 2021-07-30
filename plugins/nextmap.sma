@@ -18,6 +18,8 @@
 // However the same map in a row is still valid.
 #define OBEY_MAPCYCLE
 
+#define DEBUGFILE "opposing_forces_mapchooser_debug.txt"
+
 new g_nextMap[32]
 new g_mapCycle[32]
 new g_pos
@@ -44,6 +46,8 @@ public plugin_init()
 	}
 
 	get_mapname(g_currentMap, charsmax(g_currentMap))
+	
+	log_to_file(DEBUGFILE, "Current Map:  %s", g_currentMap)
 
 	new szString[40], szString2[32], szString3[8]
 	
@@ -94,6 +98,8 @@ public sayFFStatus()
 
 public delayedChange(param[])
 {
+	log_to_file(DEBUGFILE, "delayedChange(%s) executed", param)
+	
 	if (g_mp_chattime) {
 		set_pcvar_float(g_mp_chattime, get_pcvar_float(g_mp_chattime) - 2.0)
 	}
@@ -102,9 +108,13 @@ public delayedChange(param[])
 
 public changeMap()
 {
+	log_to_file(DEBUGFILE, "changeMap() executed")
+	
 	new string[32]
 	new Float:chattime = g_mp_chattime ? get_pcvar_float(g_mp_chattime) : 10.0;	// mp_chattime defaults to 10 in other mods
 	
+	log_to_file(DEBUGFILE, "chat time is %f", chattime)
+
 	if (g_mp_chattime) {
 		set_pcvar_float(g_mp_chattime, chattime + 2.0)		// make sure mp_chattime is long
 	}

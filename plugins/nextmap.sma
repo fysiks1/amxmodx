@@ -31,7 +31,7 @@ new g_amx_nextmap
 
 public plugin_init()
 {
-	register_plugin("NextMap", AMXX_VERSION_STR, "AMXX Dev Team")
+	register_plugin("NextMap", "custom2", "AMXX Dev Team")
 	register_dictionary("nextmap.txt")
 	register_event("30", "changeMap", "a")
 	register_clcmd("say nextmap", "sayNextMap", 0, "- displays nextmap")
@@ -111,7 +111,7 @@ public changeMap()
 	log_to_file(DEBUGFILE, "changeMap() executed")
 	
 	new string[32]
-	new Float:chattime = g_mp_chattime ? get_pcvar_float(g_mp_chattime) : 10.0;	// mp_chattime defaults to 10 in other mods
+	new Float:chattime = g_mp_chattime ? get_pcvar_float(g_mp_chattime) : 0.0;	// mp_chattime defaults to 10 in other mods
 	
 	log_to_file(DEBUGFILE, "chat time is %f", chattime)
 

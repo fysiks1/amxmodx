@@ -285,7 +285,7 @@ loadSettings(filename[])
 		{
 			ArrayPushString(g_mapName, szText);
 			++g_mapNums;
-			log_to_file(DEBUGFILE, "Loaded Map:  %s", g_mapName)
+			log_to_file(DEBUGFILE, "Loaded Map:  %s", szText)
 		}
 		
 	}

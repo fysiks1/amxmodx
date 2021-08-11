@@ -40,6 +40,7 @@
 #define charsof(%1) (sizeof(%1)-1)
 
 new Array:g_mapName;
+new Trie:g_tExtraText;
 new g_mapNums;
 
 new g_nextName[SELECTMAPS]
@@ -53,7 +54,7 @@ new bool:g_selected = false
 
 public plugin_init()
 {
-	register_plugin("Nextmap Chooser", AMXX_VERSION_STR, "AMXX Dev Team")
+	register_plugin("Nextmap Chooser", "1.8.2 f1", "AMXX Dev Team")
 	register_dictionary("mapchooser.txt")
 	register_dictionary("common.txt")
 	
@@ -80,6 +81,9 @@ public plugin_init()
 		get_cvar_string("mapcyclefile", maps_ini_file, 63)
 	if (loadSettings(maps_ini_file))
 		set_task(15.0, "voteNextmap", 987456, "", 0, "b")
+
+	g_tExtraText = TrieCreate();
+	loadExtraText();
 
 	g_coloredMenus = colored_menus()
 	
@@ -191,6 +195,7 @@ public voteNextmap()
 
 	new pos = format(menu, 511, g_coloredMenus ? "\y%L:\w^n^n" : "%L:^n^n", LANG_SERVER, "CHOOSE_NEXTM")
 	new dmax = (g_mapNums > SELECTMAPS) ? SELECTMAPS : g_mapNums
+	new szMapName[32], szExtraText[32]
 	
 	for (g_mapVoteNum = 0; g_mapVoteNum < dmax; ++g_mapVoteNum)
 	{
@@ -200,7 +205,13 @@ public voteNextmap()
 			if (++a >= g_mapNums) a = 0
 		
 		g_nextName[g_mapVoteNum] = a
-		pos += format(menu[pos], 511, "%d. %a^n", g_mapVoteNum + 1, ArrayGetStringHandle(g_mapName, a));
+
+		ArrayGetString(g_mapName, a, szMapName, charsmax(szMapName))
+		if( TrieGetString(g_tExtraText, szMapName, szExtraText, charsmax(szExtraText)) )
+			pos += format(menu[pos], charsmax(menu) - pos, "%d. %a (%s)^n", g_mapVoteNum + 1, ArrayGetStringHandle(g_mapName, a), szExtraText);
+		else
+			pos += format(menu[pos], charsmax(menu) - pos, "%d. %a^n", g_mapVoteNum + 1, ArrayGetStringHandle(g_mapName, a));
+		
 		mkeys |= (1<<g_mapVoteNum)
 		g_voteCount[g_mapVoteNum] = 0
 	}
@@ -298,6 +309,38 @@ loadSettings(filename[])
 	return g_mapNums
 }
 
+loadExtraText()
+{
+	new filename[128]
+	get_configsdir(filename, charsmax(filename))
+	add(filename, charsmax(filename), "/map_extra_text.ini")
+	
+	if( !file_exists(filename) )
+		return 0
+
+	new szMapName[32], szExtraText[32]
+	
+	new buff[256];
+	
+	new fp = fopen(filename,"r");
+	
+	while( fgets(fp, buff, charsmax(buff)) )
+	{
+		szMapName[0] = '^0';
+		szExtraText[0] = EOS;
+		
+		parse(buff, szMapName, charsmax(szMapName), szExtraText, charsmax(szExtraText));
+		
+		if( szMapName[0] != ';' )
+		{
+			TrieSetString(g_tExtraText, szMapName, szExtraText)
+		}
+	}
+	
+	fclose(fp);
+	return 0
+}
+
 public team_score()
 {
 	new team[2]
@@ -312,4 +355,7 @@ public plugin_end()
 
 	get_mapname(current_map, 31)
 	set_localinfo("lastMap", current_map)
+
+	ArrayDestroy(g_mapName)
+	TrieDestroy(g_tExtraText)
 }

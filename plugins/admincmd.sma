@@ -424,6 +424,21 @@ public cmdBan(id, level, cid)
 	read_argv(2, minutes, charsmax(minutes))
 	read_argv(3, reason, charsmax(reason))
 	
+	if( !is_str_num(minutes) )
+	{
+		new hcmd[32], hinfo[128], hflag, bool:info_ml;
+		get_concmd(cid, hcmd, charsmax(hcmd), hflag, hinfo, charsmax(hinfo), level, _, info_ml);
+
+		if (info_ml)
+		{
+			LookupLangKey(hinfo, charsmax(hinfo), hinfo, id);
+		}
+
+		console_print(id, "%L:  %s %s", id, "USAGE", hcmd, hinfo);
+		console_print(id, "The ban time <minutes> must be a number (0 for permanent)")
+		return PLUGIN_HANDLED
+	}
+
 	new player = cmd_target(id, target, CMDTARGET_OBEY_IMMUNITY | CMDTARGET_NO_BOTS | CMDTARGET_ALLOW_SELF)
 	
 	if (!player)

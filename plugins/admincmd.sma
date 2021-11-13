@@ -135,7 +135,7 @@ public client_disconnected(id)
 
 public plugin_init()
 {
-	register_plugin("Admin Commands", AMXX_VERSION_STR, "AMXX Dev Team")
+	register_plugin("Admin Commands", "1.9.0-f2", "AMXX Dev Team")
 
 	register_dictionary("admincmd.txt")
 	register_dictionary("common.txt")
@@ -1364,6 +1364,7 @@ public cmdLast(id, level, cid)
 	new ip[32];
 	new flags[32];
 	new access;
+	new iPlayer, szCurrentName[MAX_NAME_LENGTH]
 	
 	
 	// This alignment is a bit weird (it should grow if the name is larger)
@@ -1377,7 +1378,13 @@ public cmdLast(id, level, cid)
 		
 		get_flags(access, flags, charsmax(flags));
 		
-		console_print(id, "%19s %20s %15s %s", name, authid, ip, flags);
+		if( (iPlayer = find_player("c",authid)) )
+		{
+			get_user_name(iPlayer, szCurrentName, charsmax(szCurrentName))
+			format(szCurrentName, charsmax(szCurrentName), "(%s)", szCurrentName)
+		}
+		
+		console_print(id, "%19s %20s %15s %s %s", name, authid, ip, flags, iPlayer ? szCurrentName : "");
 	}
 	
 	console_print(id, "%d old connections saved.", g_Size);

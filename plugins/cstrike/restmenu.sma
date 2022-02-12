@@ -37,6 +37,7 @@ new RestrictedBotWeapons[] = "00000000000000000000000000";
 new RestrictedBotEquipAmmos[] = "000000000";
 
 new CvarPointerAllowMapSettings;
+new CvarPointerMapSettingsFallback;
 new CvarPointerRestrictedWeapons;
 new CvarPointerRestrictedEquipAmmos;
 
@@ -93,6 +94,7 @@ public plugin_init()
 	register_concmd("amx_restrict", "@ConsoleCommand_Restrict", ADMIN_CFG, .info = "REG_CMD_REST", .info_ml = true);
 
 	CvarPointerAllowMapSettings     = register_cvar("amx_restrmapsettings", "0");
+	CvarPointerMapSettingsFallback  = register_cvar("amx_restrmapsettingsfallback", "0");
 	CvarPointerRestrictedWeapons    = register_cvar("amx_restrweapons"    , RestrictedBotWeapons);
 	CvarPointerRestrictedEquipAmmos = register_cvar("amx_restrequipammo"  , RestrictedBotEquipAmmos);
 }
@@ -111,6 +113,11 @@ public OnConfigsExecuted()
 		get_mapname(mapName, charsmax(mapName));
 
 		formatex(ConfigFilePath, charsmax(ConfigFilePath), "%s/%s_%s.%s", configsDir, configFile, mapName, configFileExt);
+
+		if( !file_exists(ConfigFilePath) && get_pcvar_bool(CvarPointerMapSettingsFallback) )
+		{
+			formatex(ConfigFilePath, charsmax(ConfigFilePath), "%s/%s.%s", configsDir, configFile, configFileExt);
+		}
 	}
 	else
 	{

@@ -92,8 +92,7 @@ public plugin_init()
 #if defined USING_SQL
 	server_cmd("amx_sqladmins")
 #else
-	format(configsDir, 63, "%s/users.ini", configsDir)
-	loadSettings(configsDir)					// Load admins accounts
+	loadSettings()					// Load admins accounts
 #endif
 }
 public client_connect(id)
@@ -352,7 +351,24 @@ AddAdmin(id, auth[], accessflags[], password[], flags[], comment[]="")
 
 }
 
-loadSettings(szFilename[])
+loadSettings()
+{
+	new configDir[64], filename[96]
+	get_configsdir(configDir, charsmax(configDir))
+	format(filename, charsmax(filename), "%s/users.ini", configDir)
+	loadUsersFile(filename)
+
+	// Load Map-Specific Admins
+	new szMapname[32]
+	get_mapname(szMapname, charsmax(szMapname))
+
+	filename[0] = EOS
+	format(filename, charsmax(filename), "%s/users-%s.ini", configDir, szMapname)
+
+	loadUsersFile(filename)
+}
+
+loadUsersFile(szFilename[])
 {
 	new File=fopen(szFilename,"r");
 	
@@ -426,9 +442,7 @@ public adminSql()
 		//backup to users.ini
 		new configsDir[64]
 		
-		get_configsdir(configsDir, charsmax(configsDir))
-		format(configsDir, charsmax(configsDir), "%s/users.ini", configsDir)
-		loadSettings(configsDir) // Load admins accounts
+		loadSettings() // Load admins accounts
 
 		return PLUGIN_HANDLED
 	}
@@ -511,13 +525,9 @@ public cmdReload(id, level, cid)
 	admins_flush();
 
 #if !defined USING_SQL
-	new filename[128]
-	
-	get_configsdir(filename, charsmax(filename))
-	format(filename, charsmax(filename), "%s/users.ini", filename)
 
 	AdminCount = 0;
-	loadSettings(filename);		// Re-Load admins accounts
+	loadSettings();		// Re-Load admins accounts
 
 	if (id != 0)
 	{

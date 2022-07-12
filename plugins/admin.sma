@@ -359,13 +359,20 @@ loadSettings()
 	loadUsersFile(filename)
 
 	// Load Map-Specific Admins
-	new szMapname[32]
+	new szMapname[32], prefixBreak
 	get_mapname(szMapname, charsmax(szMapname))
 
 	filename[0] = EOS
 	format(filename, charsmax(filename), "%s/users-%s.ini", configDir, szMapname)
-
 	loadUsersFile(filename)
+
+	if( ( prefixBreak = strfind(szMapname, "_") ) != -1 )
+	{
+		szMapname[prefixBreak] = EOS
+		filename[0] = EOS
+		format(filename, charsmax(filename), "%s/users-%s.ini", configDir, szMapname)
+		loadUsersFile(filename)
+	}
 }
 
 loadUsersFile(szFilename[])

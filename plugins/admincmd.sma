@@ -204,7 +204,10 @@ public cmdKick(id, level, cid)
 	
 	log_amx("Kick: ^"%s<%d><%s><>^" kick ^"%s<%d><%s><>^" (reason ^"%s^")", name, get_user_userid(id), authid, name2, userid2, authid2, reason)
 
-	show_activity_key("ADMIN_KICK_1", "ADMIN_KICK_2", name, name2);
+	if( get_user_flags(id) & ADMIN_KICK )
+	{
+		show_activity_key("ADMIN_KICK_1", "ADMIN_KICK_2", name, name2);
+	}
 
 	if (is_user_bot(player))
 		server_cmd("kick #%d", userid2)
@@ -269,7 +272,10 @@ public cmdUnban(id, level, cid)
 
 	get_user_name(id, name, charsmax(name))
 
-	show_activity_key("ADMIN_UNBAN_1", "ADMIN_UNBAN_2", name, arg);
+	if( get_user_flags(id) & ADMIN_KICK )
+	{
+		show_activity_key("ADMIN_UNBAN_1", "ADMIN_UNBAN_2", name, arg);
+	}
 
 	log_amx("Cmd: ^"%s<%d><%s><>^" unban ^"%s^"", name, get_user_userid(id), authid, arg)
 	
@@ -404,7 +410,10 @@ public cmdAddBan(id, level, cid)
 
 	get_user_name(id, name, charsmax(name))
 
-	show_activity_key("ADMIN_ADDBAN_1", "ADMIN_ADDBAN_2", name, arg);
+	if( get_user_flags(id) & ADMIN_KICK )
+	{
+		show_activity_key("ADMIN_ADDBAN_1", "ADMIN_ADDBAN_2", name, arg);
+	}
 
 	get_user_authid(id, authid, charsmax(authid))
 	TrieSetString(g_tempBans, arg, authid)
@@ -613,7 +622,10 @@ public cmdSlay(id, level, cid)
 	
 	log_amx("Cmd: ^"%s<%d><%s><>^" slay ^"%s<%d><%s><>^"", name, get_user_userid(id), authid, name2, get_user_userid(player), authid2)
 
-	show_activity_key("ADMIN_SLAY_1", "ADMIN_SLAY_2", name, name2);
+	if( get_user_flags(id) & ADMIN_KICK )
+	{
+		show_activity_key("ADMIN_SLAY_1", "ADMIN_SLAY_2", name, name2);
+	}
 
 	console_print(id, "[AMXX] %L", id, "CLIENT_SLAYED", name2)
 	
@@ -648,7 +660,10 @@ public cmdSlap(id, level, cid)
 	
 	log_amx("Cmd: ^"%s<%d><%s><>^" slap with %d damage ^"%s<%d><%s><>^"", name, get_user_userid(id), authid, damage, name2, get_user_userid(player), authid2)
 
-	show_activity_key("ADMIN_SLAP_1", "ADMIN_SLAP_2", name, name2, damage);
+	if( get_user_flags(id) & ADMIN_KICK )
+	{
+		show_activity_key("ADMIN_SLAP_1", "ADMIN_SLAP_2", name, name2, damage);
+	}
 
 	console_print(id, "[AMXX] %L", id, "CLIENT_SLAPED", name2, damage)
 	
@@ -679,7 +694,10 @@ public cmdMap(id, level, cid)
 	get_user_authid(id, authid, charsmax(authid))
 	get_user_name(id, name, charsmax(name))
 	
-	show_activity_key("ADMIN_MAP_1", "ADMIN_MAP_2", name, arg);
+	if( get_user_flags(id) & ADMIN_KICK )
+	{
+		show_activity_key("ADMIN_MAP_1", "ADMIN_MAP_2", name, arg);
+	}
 	
 	log_amx("Cmd: ^"%s<%d><%s><>^" changelevel ^"%s^"", name, get_user_userid(id), authid, arg)
 	
@@ -718,7 +736,10 @@ public cmdExtendMap(id, level, cid)
 	get_user_authid(id, authid, charsmax(authid))
 	get_user_name(id, name, charsmax(name))
 	
-	show_activity_key("ADMIN_EXTEND_1", "ADMIN_EXTEND_2", name, mns)
+	if( get_user_flags(id) & ADMIN_KICK )
+	{
+		show_activity_key("ADMIN_EXTEND_1", "ADMIN_EXTEND_2", name, mns)
+	}
 	
 	log_amx("ExtendMap: ^"%s<%d><%s><>^" extended map ^"%s^" for %d minutes.", name, get_user_userid(id), authid, mapname, mns)
 	console_print(id, "%L", id, "MAP_EXTENDED", mapname, mns)
@@ -1084,7 +1105,10 @@ public cmdCfg(id, level, cid)
 	console_print(id, "[AMXX] Executing file ^"%s^"", arg)
 	server_cmd("exec ^"%s^"", arg)
 
-	show_activity_key("ADMIN_CONF_1", "ADMIN_CONF_2", name, arg);
+	if( get_user_flags(id) & ADMIN_KICK )
+	{
+		show_activity_key("ADMIN_CONF_1", "ADMIN_CONF_2", name, arg);
+	}
 
 	return PLUGIN_HANDLED
 }
@@ -1301,7 +1325,10 @@ public cmdLeave(id, level, cid)
 	get_user_name(id, name, charsmax(name))
 	log_amx("Kick: ^"%s<%d><%s><>^" leave some group (tag1 ^"%s^") (tag2 ^"%s^") (tag3 ^"%s^") (tag4 ^"%s^")", name, get_user_userid(id), authid, ltags[0], ltags[1], ltags[2], ltags[3])
 
-	show_activity_key("ADMIN_LEAVE_1", "ADMIN_LEAVE_2", name, ltags[0], ltags[1], ltags[2], ltags[3]);
+	if( get_user_flags(id) & ADMIN_KICK )
+	{
+		show_activity_key("ADMIN_LEAVE_1", "ADMIN_LEAVE_2", name, ltags[0], ltags[1], ltags[2], ltags[3]);
+	}
 
 	return PLUGIN_HANDLED
 }
@@ -1330,7 +1357,10 @@ public cmdNick(id, level, cid)
 
 	log_amx("Cmd: ^"%s<%d><%s><>^" change nick to ^"%s^" ^"%s<%d><%s><>^"", name, get_user_userid(id), authid, arg2, name2, get_user_userid(player), authid2)
 
-	show_activity_key("ADMIN_NICK_1", "ADMIN_NICK_2", name, name2, arg2);
+	if( get_user_flags(id) & ADMIN_KICK )
+	{
+		show_activity_key("ADMIN_NICK_1", "ADMIN_NICK_2", name, name2, arg2);
+	}
 
 	console_print(id, "[AMXX] %L", id, "CHANGED_NICK", name2, arg2)
 

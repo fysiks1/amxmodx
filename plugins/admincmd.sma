@@ -135,7 +135,7 @@ public client_disconnected(id)
 
 public plugin_init()
 {
-	register_plugin("Admin Commands", AMXX_VERSION_STR, "AMXX Dev Team")
+	register_plugin("Admin Commands", "1.10fy", "AMXX Dev Team")
 
 	register_dictionary("admincmd.txt")
 	register_dictionary("common.txt")

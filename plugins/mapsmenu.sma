@@ -29,7 +29,7 @@ new g_choosed
 
 public plugin_init()
 {
-	register_plugin("Maps Menu", AMXX_VERSION_STR, "AMXX Dev Team")
+	register_plugin("Maps Menu", "Custom 1.0", "AMXX Dev Team")
 	register_dictionary("mapsmenu.txt")
 	register_dictionary("common.txt")
 	register_clcmd("amx_mapmenu", "cmdMapsMenu", ADMIN_MAP, "- displays changelevel menu")
@@ -39,7 +39,7 @@ public plugin_init()
 	register_menucmd(register_menuid("Which map do you want?"), 527, "voteCount")
 	register_menucmd(register_menuid("Change map to"), 527, "voteCount")
 	register_menucmd(register_menuid("Votemap Menu"), 1023, "actionVoteMapMenu")
-	register_menucmd(register_menuid("The winner: "), 3, "actionResult")
+	register_menucmd(register_menuid("The winner: "), 7, "actionResult")
 
 	g_mapName=ArrayCreate(32);
 	
@@ -88,7 +88,16 @@ public actionResult(id, key)
 			log_amx("Vote: %L", "en", "RESULT_ACC")
 			client_print(0, print_chat, "%L", LANG_PLAYER, "RESULT_ACC")
 		}
-		case 1: autoRefuse()
+		case 1:
+		{
+			new tempMap[32];
+			ArrayGetString(g_mapName, g_choosed, tempMap, charsmax(tempMap));
+			set_cvar_string("amx_nextmap", tempMap);
+
+			log_amx("Vote: %L (next map)", "en", "RESULT_ACC")
+			client_print(0, print_chat, "%L (next map)", LANG_PLAYER, "RESULT_ACC")
+		}
+		case 2: autoRefuse()
 	}
 	
 	return PLUGIN_HANDLED
@@ -127,10 +136,10 @@ public checkVotes(id)
 			new menuBody[512]
 			new tempMap[32];
 			ArrayGetString(g_mapName, g_choosed, tempMap, charsmax(tempMap));
-			new len = format(menuBody, charsmax(menuBody), g_coloredMenus ? "\y%L: \w%s^n^n" : "%L: %s^n^n", id, "THE_WINNER", tempMap)
+			new len = format(menuBody, charsmax(menuBody), g_coloredMenus ? "\y%L: \w%s^n^n" : "%L: %s^n^n", id, "THE_WINNER", tempMap) // "
 			
 			len += format(menuBody[len], charsmax(menuBody) - len, g_coloredMenus ? "\y%L^n\w" : "%L^n", id, "WANT_CONT")
-			format(menuBody[len], charsmax(menuBody) - len, "^n1. %L^n2. %L", id, "YES", id, "NO")
+			format(menuBody[len], charsmax(menuBody) - len, "^n1. %L (immediately)^n2. %L (next map)^n3. %L", id, "YES", id, "YES", id, "NO")
 
 			show_menu(id, 0x03, menuBody, 10, "The winner: ")
 			set_task(10.0, "autoRefuse", 4545454)
@@ -238,7 +247,7 @@ displayVoteMapsMenu(id, pos)
 		len += format(menuBody[len], charsmax(menuBody) - len, "^n0. %L^n", id, pos ? "BACK" : "EXIT")
 
 	if (g_voteSelectedNum[id])
-		len += format(menuBody[len], charsmax(menuBody) - len, g_coloredMenus ? "^n\y%L:^n\w" : "^n%L:^n", id, "SEL_MAPS")
+		len += format(menuBody[len], charsmax(menuBody) - len, g_coloredMenus ? "^n\y%L:^n\w" : "^n%L:^n", id, "SEL_MAPS") // "
 	else
 		len += format(menuBody[len], charsmax(menuBody) - len, "^n^n")
 

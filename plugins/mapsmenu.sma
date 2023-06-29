@@ -69,7 +69,6 @@ public event_new_round()
 		new szMapname[32];
 		get_cvar_string("amx_nextmap", szMapname, charsmax(szMapname));
 		server_cmd("changelevel %s", szMapname);
-		server_exec();
 	}
 }
 

@@ -31,7 +31,7 @@ new bool:g_bChangeOnRound = false
 
 public plugin_init()
 {
-	register_plugin("Maps Menu", "Custom 1.1", "AMXX Dev Team")
+	register_plugin("Maps Menu", "Custom 1.2", "AMXX Dev Team")
 	register_dictionary("mapsmenu.txt")
 	register_dictionary("common.txt")
 	register_clcmd("amx_mapmenu", "cmdMapsMenu", ADMIN_MAP, "- displays changelevel menu")
@@ -156,7 +156,7 @@ public checkVotes(id)
 			len += format(menuBody[len], charsmax(menuBody) - len, g_coloredMenus ? "\y%L^n\w" : "%L^n", id, "WANT_CONT")
 			format(menuBody[len], charsmax(menuBody) - len, "^n1. %L (immediately)^n2. %L (next round)^n3. %L", id, "YES", id, "YES", id, "NO")
 
-			show_menu(id, 0x03, menuBody, 10, "The winner: ")
+			show_menu(id, 7, menuBody, 10, "The winner: ")
 			set_task(10.0, "autoRefuse", 4545454)
 		} else {
 			new _modName[10]

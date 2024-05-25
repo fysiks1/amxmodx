@@ -2126,6 +2126,7 @@ native server_exec();
  *
  * @note The sample must be precached using precache_sound() so it is available
  *       in the engine's sound table.
+ * @note The sample's path is relative to the "sound" folder.
  * @note For a list of available channels, see CHAN_* constants in amxconst.inc,
  *       sounds emitted from the same channel will override each other.
  * @note There are helpful reference constants in amxconst.inc for sound volume
@@ -2133,7 +2134,7 @@ native server_exec();
  *
  * @param index     Entity index, use 0 to emit from all clients
  * @param channel   Channel to emit from
- * @param sample    Sound file to emit
+ * @param sample    Path of sound file to emit
  * @param vol       Volume in percent
  * @param att       Sound attenuation
  * @param flags     Emit flags

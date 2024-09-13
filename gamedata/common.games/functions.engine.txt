@@ -15,19 +15,32 @@
 	{
 		"Signatures"
 		{
-			"SV_DropClient" // void SV_DropClient(client_t *cl, qboolean crash, const char *fmt, ...);
+			"SV_DropClient"     /// void SV_DropClient(client_t *cl, qboolean crash, const char *fmt, ...);
 			{
-				"library"   "engine"
-				"windows"   "\x55\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x53\x56\x8D"
-				"linux"     "@SV_DropClient"
-				"mac"       "@SV_DropClient"
+				///
+				"library"       "engine"
+				///
+				/// "windows"   "\x55\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x53\x56\x8D"                                                                                                          /// [ HLDS 2020 ] CS/ CZ, DOD, HL, ... ( OLD )
+				///
+				"windows"       "\x55\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x56\x57\x8B\x2A\x2A\x8D\x2A\x2A\x50\x33\x2A\x8D\x2A\x2A\x2A\x2A\x2A\x56\xFF\x2A\x2A\x68"  /// [ HLDS 2023 ] CS/ CZ, DOD, HL, ... ( NEW ) @ sub_101D1CB0()
+				///
+				"linux"         "@SV_DropClient"
+				"mac"           "@SV_DropClient"
+				///
 			}
-			"Cvar_DirectSet" // void Cvar_DirectSet(struct cvar_s *var, char *value);
+
+			"Cvar_DirectSet"    /// void Cvar_DirectSet(struct cvar_s *var, char *value);
 			{
-				"library"   "engine"
-				"windows"   "\x55\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\x2A\x57\x8B\x2A\x2A\x85"
-				"linux"     "@Cvar_DirectSet"
-				"mac"       "@Cvar_DirectSet"
+				///
+				"library"       "engine"
+				///
+				/// "windows"   "\x55\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\x56\x8B\x2A\x2A\x57\x8B\x2A\x2A\x85"                                                                                              /// [ HLDS 2020 ] CS/ CZ, DOD, HL, ... ( OLD )
+				///
+				"windows"       "\x55\x8B\x2A\x81\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x33\x2A\x89\x2A\x2A\x56\x8B\x2A\x2A\x57\x8B\x2A\x2A\x85\x2A\x0F\x2A\x2A\x2A\x2A\x2A\x85\x2A\x0F"              /// [ HLDS 2023 ] CS/ CZ, DOD, HL, ... ( NEW ) @ sub_101BDCF0()
+				///
+				"linux"         "@Cvar_DirectSet"
+				"mac"           "@Cvar_DirectSet"
+				///
 			}
 		}
 	}

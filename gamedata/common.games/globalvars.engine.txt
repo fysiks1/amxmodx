@@ -15,9 +15,13 @@
 	{
 		"Offsets"
 		{
-			"svs"    // Used with pfnGetCurrentPlayer base address
+			"svs"                   /// Used With   pfnGetCurrentPlayer     Base Address
 			{
-				"windows"   "8"
+				///
+				/// "windows"       "8"     /// 2020 HLDS (CS/ CZ, DOD, HL, ...)
+				///
+				"windows"           "13"    /// 2023 HLDS (CS/ CZ, DOD, HL, ...)
+				///
 			}
 		}
 
@@ -27,8 +31,9 @@
 			{
 				"windows"
 				{
-					"signature"  "realtime"
-					"read"       "2"
+					"signature"     "realtime"
+
+					"read"          "2"
 				}
 			}
 
@@ -36,55 +41,80 @@
 			{
 				"windows"
 				{
-					"signature"  "sv"
-					"read"       "2"
+					"signature"     "sv"
+
+					"read"          "2"
 				}
 			}
 
 			"g_pGameRules"
 			{
-				"signature"  "g_pGameRules"
-				
+				"signature"         "g_pGameRules"
+
 				"windows"
 				{
-					"read"       "2"
+					///
+					/// "read"      "2"     /// [ HLDS 2020 ]   CS/ CZ
+					///
+					"read"          "1"     /// [ HLDS 2023 ]   CS/ CZ, DOD, HL, ...
+					///
 				}
-				
-				"read"  "0"
+
+				"read"              "0"
 			}
 		}
 
 		"Signatures"
 		{
-			"svs"    // server_static_t svs
+			"svs"                   /// server_static_t     svs
 			{
-				"library"   "engine"
-				"linux"     "@svs"
-				"mac"       "@svs"
+				"library"           "engine"
+				"linux"             "@svs"
+				"mac"               "@svs"
 			}
 
-			"sv"    // server_t sv
+			"sv"                    /// server_t            sv
 			{
-				"library"   "engine"
-				"windows"   "\x8B\x2A\x2A\x2A\x2A\x2A\x8D\x2A\x2A\x2A\x2A\x2A\x53\x33\x2A\x89"  // SVC_PlayerInfo()
-				"linux"     "@sv"
-				"mac"       "@sv"
+				///
+				"library"           "engine"
+				///
+				/// "windows"       "\x8B\x2A\x2A\x2A\x2A\x2A\x8D\x2A\x2A\x2A\x2A\x2A\x53\x33\x2A\x89"                                                                                                                      /// SVC_PlayerInfo()                [ 2020 HLDS ]   CS/ CZ, DOD, HL, ...
+				///
+				"windows"           "\x8B\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x76\x2A\xA1\x2A\x2A\x2A\x2A\x85\x2A\x0F\x2A\x2A\x83\x2A\x2A\x74\x2A\x83\x2A\x2A\x2A\x2A\x2A\x2A\x74"                                  /// dword_10971F40 @ sub_101D1EF0() [ 2023 HLDS ]   CS/ CZ, DOD, HL, ...
+				///
+				"linux"             "@sv"
+				"mac"               "@sv"
+				///
 			}
 
-			"realtime"    // double realtime
+			"realtime"              /// double              realtime
 			{
-				"library"   "engine"
-				"windows"   "\xDC\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x56" // SV_CheckTimeouts()
-				"linux"     "@realtime"
-				"mac"       "@realtime"
+				///
+				"library"           "engine"
+				///
+				/// "windows"       "\xDC\x2A\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x56"                                                                                                                                      /// SV_CheckTimeouts()              [ 2020 HLDS ]   CS/ CZ, DOD, HL, ...
+				///
+				"windows"           "\xF2\x2A\x2A\x2A\x2A\x2A\x2A\x2A\x66\x2A\x2A\x2A\x72\x2A\x3B\x2A\x7D\x2A\x8B\x2A\x8D\x2A\x2A\x2B\x2A\x8B\x2A\xC1\x2A\x2A\x81\x2A\x2A\x2A\x2A\x2A\xF3\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x8B"  /// qword_10B6A158 @ sub_10208750() [ 2023 HLDS ]   CS/ CZ, DOD, HL, ...
+				///
+				"linux"             "@realtime"
+				"mac"               "@realtime"
+				///
 			}
 
-			"g_pGameRules" // CGameRules *g_pGameRules
+			"g_pGameRules"          /// CGameRules *        g_pGameRules
 			{
-				"library"   "server"
-				"windows"   "\x8B\x2A\x2A\x2A\x2A\x2A\x85\x2A\x74\x2A\x8B\x2A\xFF\x2A\x2A\xA1" // StartFrame()
-				"linux"     "@g_pGameRules"
-				"mac"       "@g_pGameRules"
+				///
+				"library"           "server"
+				///
+				/// "windows"       "\x8B\x2A\x2A\x2A\x2A\x2A\x85\x2A\x74\x2A\x8B\x2A\xFF\x2A\x2A\xA1"                                                                                                                      /// StartFrame()                    [ 2020 HLDS ]   CS/ CZ
+				///
+				"windows"           "\xA3\x2A\x2A\x2A\x2A\xFF\x2A\x2A\x2A\x2A\x2A\x85\x2A\x75\x2A\x33\x2A\xEB"                                                                                                              /// dword_10130BA0 @ sub_100C2440() [ 2023 HLDS ]   CS/ CZ
+				/// "windows"       "\xA3\x2A\x2A\x2A\x2A\xA1\x2A\x2A\x2A\x2A\x8B\x2A\x8B\x2A\x2A\x2A\x2A\x2A\xFF\x2A\x6A\x2A\xE8\x2A\x2A\x2A\x2A\x83\x2A\x2A\xA3\x2A\x2A\x2A\x2A\xA1"                                      /// dword_1013B31C @ sub_100BB790() [ 2023 HLDS ]   DOD
+				/// "windows"       "\xA3\x2A\x2A\x2A\x2A\xFF\x2A\x2A\x2A\x2A\x2A\x85\x2A\x75\x2A\x33\x2A\xEB\x2A\x8D\x2A\x2A\x2A\x2A\x2A\x8B\x2A\x2A\x2A\x2A\x2A\x89\x2A\x2A\x85\x2A\x74\x2A\x8B\x2A\x2A\x85\x2A\x75"      /// dword_100D74A4 @ sub_100985B0() [ 2023 HLDS ]   HL
+				///
+				"linux"             "@g_pGameRules"
+				"mac"               "@g_pGameRules"
+				///
 			}
 		}
 	}

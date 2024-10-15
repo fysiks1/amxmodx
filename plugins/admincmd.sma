@@ -38,6 +38,8 @@ new g_Size;
 public Trie:g_tempBans
 new Trie:g_tXvarsFlags;
 
+new Trie:g_tCvarAccess
+
 stock InsertInfo(id)
 {
 	
@@ -135,7 +137,7 @@ public client_disconnected(id)
 
 public plugin_init()
 {
-	register_plugin("Admin Commands", AMXX_VERSION_STR, "AMXX Dev Team")
+	register_plugin("Admin Commands", AMXX_VERSION_STR, "AMXX Dev Team (fy)")
 
 	register_dictionary("admincmd.txt")
 	register_dictionary("common.txt")
@@ -178,6 +180,10 @@ public plugin_init()
 	{
 		set_pcvar_flags(rcon_password, flags | FCVAR_PROTECTED);
 	}
+
+	g_tCvarAccess = TrieCreate()
+	// TrieSetCell(g_tCvarAccess, "mp_timelimit", ADMIN_LEVEL_A)
+	LoadCvarAccess()
 }
 
 public cmdKick(id, level, cid)
@@ -738,14 +744,19 @@ stock bool:onlyRcon(const name[])
 
 public cmdCvar(id, level, cid)
 {
-	if (!cmd_access(id, level, cid, 2))
-		return PLUGIN_HANDLED
-	
 	new arg[32], arg2[64]
 	
 	read_argv(1, arg, charsmax(arg))
 	read_argv(2, arg2, charsmax(arg2))
-	
+
+	trim(arg);
+
+	new iAccess = 0
+	if( TrieGetCell(g_tCvarAccess, arg, iAccess) ? !access(id, iAccess) : !cmd_access(id, level, cid, 2) )
+	{
+		return PLUGIN_HANDLED
+	}
+
 	new pointer;
 	
 	if (equal(arg, "add") && (get_user_flags(id) & ADMIN_RCON))
@@ -761,8 +772,6 @@ public cmdCvar(id, level, cid)
 		}
 		return PLUGIN_HANDLED
 	}
-	
-	trim(arg);
 	
 	if ((pointer=get_cvar_pointer(arg))==0)
 	{
@@ -1370,8 +1379,33 @@ public cmdLast(id, level, cid)
 	return PLUGIN_HANDLED;
 }
 
+LoadCvarAccess()
+{
+	new szFilepath[128]
+	get_configsdir(szFilepath, charsmax(szFilepath))
+	add(szFilepath, charsmax(szFilepath), "/cvaraccess.ini")
+
+	new f = fopen(szFilepath, "rt")
+	if( f )
+	{
+		new szBuffer[64], szCvar[32], szAccessFlag[6], iArgPos
+		while( fgets(f, szBuffer, charsmax(szBuffer)) )
+		{
+			iArgPos = argparse(szBuffer, iArgPos, szCvar, charsmax(szCvar))
+			iArgPos = argparse(szBuffer, iArgPos, szAccessFlag, charsmax(szAccessFlag))
+			if( szCvar[0] )
+			{
+				TrieSetCell(g_tCvarAccess, szCvar, read_flags(szAccessFlag))
+			}
+		}
+		fclose(f)
+	}
+}
+
+
 public plugin_end()
 {
 	TrieDestroy(g_tempBans);
 	TrieDestroy(g_tXvarsFlags);
+	TrieDestroy(g_tCvarAccess);
 }

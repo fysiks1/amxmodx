@@ -33,7 +33,7 @@ public plugin_init()
 {
 	new admin_chat_id
 
-	register_plugin("Admin Chat", AMXX_VERSION_STR, "AMXX Dev Team")
+	register_plugin("Admin Chat", "1.9.0(fy)", "AMXX Dev Team")
 	register_dictionary("adminchat.txt")
 	register_dictionary("common.txt")
 	register_dictionary("antiflood.txt")

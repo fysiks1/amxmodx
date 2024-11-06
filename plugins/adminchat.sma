@@ -43,7 +43,7 @@ public plugin_init()
 	admin_chat_id = register_concmd("amx_chat", "cmdChat", ADMIN_CHAT, "<message> - sends message to admins")
 	register_concmd("amx_psay", "cmdPsay", ADMIN_CHAT, "<name or #userid> <message> - sends private message")
 	register_concmd("amx_tsay", "cmdTsay", ADMIN_CHAT, "<color> <message> - sends left side hud message to all players")
-	register_concmd("amx_tsay2", "cmdTsay", ADMIN_CHAT, "<color> <message> - sends left side hud message to all players")
+	register_concmd("amx_tsay2", "cmdTsay", ADMIN_CHAT, "<color> <message> - sends left side hud message to all players & via chat")
 	register_concmd("amx_csay", "cmdTsay", ADMIN_CHAT, "<color> <message> - sends center hud message to all players")
 	
 	amx_show_activity = get_cvar_pointer("amx_show_activity");

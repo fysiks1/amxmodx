@@ -43,6 +43,7 @@ public plugin_init()
 	admin_chat_id = register_concmd("amx_chat", "cmdChat", ADMIN_CHAT, "<message> - sends message to admins")
 	register_concmd("amx_psay", "cmdPsay", ADMIN_CHAT, "<name or #userid> <message> - sends private message")
 	register_concmd("amx_tsay", "cmdTsay", ADMIN_CHAT, "<color> <message> - sends left side hud message to all players")
+	register_concmd("amx_tsay2", "cmdTsay", ADMIN_CHAT, "<color> <message> - sends left side hud message to all players")
 	register_concmd("amx_csay", "cmdTsay", ADMIN_CHAT, "<color> <message> - sends center hud message to all players")
 	
 	amx_show_activity = get_cvar_pointer("amx_show_activity");
@@ -342,6 +343,7 @@ public cmdTsay(id, level, cid)
 	
 	read_argv(0, cmd, charsmax(cmd))
 	new bool:tsay = (tolower(cmd[4]) == 't')
+	new bool:tsay2 = (tolower(cmd[8]) == '2')
 	
 	read_args(message, charsmax(message))
 	remove_quotes(message)
@@ -415,6 +417,11 @@ public cmdTsay(id, level, cid)
 			client_print(0, print_notify, "%s", message[length])
 			console_print(id, "%s", message[length])
 		}
+	}
+
+	if( tsay2 )
+	{
+		engclient_cmd(id, "say", message[length])
 	}
 
 	log_amx("Chat: ^"%s<%d><%s><>^" %s ^"%s^"", name, userid, authid, cmd[4], message[length])

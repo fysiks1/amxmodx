@@ -46,7 +46,10 @@ enum
 #define AMMO_HEAVY 6 		// bar, bren, stg44, fg42, scoped fg42
 #define AMMO_MG42 7    		// mg42
 #define AMMO_30CAL 8 		// 30cal
-#define AMMO_GREN 9 		// grenades (should be all 3 types)
+#define AMMO_GREN 9 		// hand grenades (includes mills bombs)
+#define AMMO_GREN_EX 10     // primed hand grenades
+#define AMMO_STICKGREN 11   // stick grenades
+#define AMMO_STICKGREN_EX 12// primed stick grenades
 #define AMMO_ROCKET 13 		// bazooka, piat, panzerschreck
 enum { 
 	PS_NOPRONE =0,
